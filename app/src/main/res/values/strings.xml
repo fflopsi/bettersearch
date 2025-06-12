@@ -1,0 +1,49 @@
+<resources>
+  <string name="app_name" translatable="false">BetterSearch</string>
+  <string name="duckduckgo" translatable="false">DuckDuckGo</string>
+  <string name="about">About</string>
+  <string name="settings">Settings</string>
+  <string name="search">Search</string>
+  <string name="clear">Clear</string>
+  <string name="fill">Fill</string>
+  <string name="ok">OK</string>
+  <string name="built_by">Jetpack Compose app, built by Florian Frauenfelder</string>
+  <string name="github_link" translatable="false">https://github.com/fflopsi/bettersearch</string>
+  <string name="back">Back</string>
+  <string name="search_engine">Search engine</string>
+  <string name="theme">Theme</string>
+  <string name="light">Light</string>
+  <string name="dark">Dark</string>
+  <string name="auto">Auto</string>
+  <string name="active">Active</string>
+  <string name="use_dynamic_colors">Use dynamic colors</string>
+  <string name="show_intro">Show intro…</string>
+  <string name="show_quick_engines">Show quick access search engines</string>
+  <string name="show_quick_engines_desc">Show quick access search engine selection on search screen</string>
+  <string name="widget_desc">BetterSearch search bar to search your preferred search engine</string>
+  <string name="cancel">Cancel</string>
+  <string name="move_down">Move down</string>
+  <string name="move_up">Move up</string>
+  <string name="remove">Remove</string>
+  <string name="available_search_engines">Available search engines</string>
+  <string name="add">Add</string>
+  <string name="from_history">From history</string>
+  <string name="delete">Delete</string>
+  <string name="select_quick_engines">Select quick access engines…</string>
+  <string name="suggest_from_history">Suggest from history</string>
+  <string name="suggest_from_history_desc">Show suggestions from search history</string>
+  <string name="suggest_from_all_engines_history">Suggest from all engines\' history</string>
+  <string name="suggest_from_all_engines_history_desc">Show suggestions from the search histories of all search engines</string>
+  <string name="none_selected">None selected</string>
+  <string name="thank_you">Thank you for installing BetterSearch!</string>
+  <string name="app_desc">This app provides a better search feeling: select your preferred search engine, search for something using autocompletion from your selected engine, and the results open in your default browser.</string>
+  <string name="restriction_icons">Due to restrictions from Google and Android, the icons on the search bar will most likely remain unchanged.</string>
+  <string name="show_intro_again">Show intro again at next app startup</string>
+  <string name="add_widget">Add widget to home screen</string>
+  <string name="app_icon_widget_desc">You can also just use this app as a better search app and open it normally via the icon or the widget.</string>
+  <string name="search_bar_instruction">If you want this app to appear after tapping on the default search bar on your home screen, you have to (most likely) uninstall or disable all apps that could provide a search interface, notably:</string>
+  <string name="bad_app_examples">Google, DuckDuckGo, Ecosia, Brave, Bing, …</string>
+  <string name="show_intro_again_settings">To show this intro screen again, tap \"%1$s\" in the app settings.</string>
+  <string name="search_in">Search %1$s…</string>
+  <string name="done">Done</string>
+</resources>

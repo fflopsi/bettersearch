@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="about">Über</string>
+  <string name="settings">Einstellungen</string>
+  <string name="search">Suchen</string>
+  <string name="clear">Leeren</string>
+  <string name="fill">Vervollständigen</string>
+  <string name="ok">Ok</string>
+  <string name="back">Zurück</string>
+  <string name="search_engine">Suchmaschine</string>
+  <string name="theme">Farbschema</string>
+  <string name="light">Hell</string>
+  <string name="dark">Dunkel</string>
+  <string name="auto">Auto</string>
+  <string name="active">Aktiv</string>
+  <string name="use_dynamic_colors">Dynamische Farben benutzen</string>
+  <string name="built_by">Jetpack Compose App, geschrieben von Florian Frauenfelder</string>
+  <string name="show_intro">Einführung anzeigen…</string>
+  <string name="show_quick_engines">Schnellzugriff-Suchmaschinen anzeigen</string>
+  <string name="show_quick_engines_desc">Auswahl an Schnellzugriff-Suchmaschinen im Suchfenster anzeigen</string>
+  <string name="widget_desc">BetterSearch-Suchzeile um in deiner ausgewählten Suchmaschine zu suchen</string>
+  <string name="cancel">Abbrechen</string>
+  <string name="move_down">Nach unten verschieben</string>
+  <string name="move_up">Nach oben verschieben</string>
+  <string name="remove">Entfernen</string>
+  <string name="available_search_engines">Verfügbare Suchmaschinen</string>
+  <string name="add">Hinzufügen</string>
+  <string name="from_history">Aus Verlauf</string>
+  <string name="delete">Löschen</string>
+  <string name="select_quick_engines">Schnellzugriff-Suchmaschinen auswählen…</string>
+  <string name="suggest_from_history">Aus Verlauf vorschlagen</string>
+  <string name="suggest_from_history_desc">Vorschläge aus dem Verlauf anzeigen</string>
+  <string name="suggest_from_all_engines_history">Aus Verlauf aller Suchmaschinen vorschlagen</string>
+  <string name="suggest_from_all_engines_history_desc">Vorschläge aus den Verläufen aller Suchmaschinen anzeigen</string>
+  <string name="none_selected">Keine ausgewählt</string>
+  <string name="thank_you">Vielen Dank, dass du BetterSearch installiert hast!</string>
+  <string name="app_desc">Diese App bietet ein besseres Such-Erlebnis: Wähle eine Suchmaschine aus, suche mithilfe der automatischen Vervollständigung der ausgewählten Suchmaschine, und die Resultate werden in deinem Standardbrowser geöffnet.</string>
+  <string name="restriction_icons">Wegen Einschränkungen von Google und Android werden die Symbole auf der Suchleiste wahrscheinlich gleich bleiben.</string>
+  <string name="show_intro_again">Einführung beim nächsten Start wieder anzeigen</string>
+  <string name="add_widget">Widget zum Startbildschirm hinzufügen</string>
+  <string name="app_icon_widget_desc">Du kannst die App auch einfach als bessere Such-App verwenden und sie normal über das App-Symbol oder das Widget öffnen.</string>
+  <string name="search_bar_instruction">Wenn du willst, dass diese App nach Tippen auf die Standard-Suchleiste auf deinem Startbildschirm geöffnet wird, musst du (sehr wahrscheinlich) alle Apps deinstallieren oder deaktivieren, die eine Such-Oberfläche bereitstellen, vor allem:</string>
+  <string name="bad_app_examples">Google, DuckDuckGo, Ecosia, Brave, Bing, …</string>
+  <string name="show_intro_again_settings">Um diese Einführung nochmals anzuzeigen, tippe auf \"%1$s\" in den App-Einstellungen.</string>
+  <string name="search_in">Durchsuche %1$s…</string>
+  <string name="done">Fertig</string>
+</resources>
