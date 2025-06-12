@@ -1,6 +1,5 @@
 <resources>
   <string name="app_name" translatable="false">BetterSearch</string>
-  <string name="duckduckgo" translatable="false">DuckDuckGo</string>
   <string name="about">About</string>
   <string name="settings">Settings</string>
   <string name="search">Search</string>
