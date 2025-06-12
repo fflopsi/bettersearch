@@ -3,7 +3,6 @@ package ch.frauenfelderflorian.bettersearch.ui
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
@@ -192,9 +191,6 @@ fun BetterSearchApp(
               val provider = ComponentName(context, BetterSearchWidgetReceiver::class.java)
               if (manager.isRequestPinAppWidgetSupported) {
                 manager.requestPinAppWidget(provider, null, null)
-                Log.d("Widget", "Widget added")
-              } else {
-                Log.d("Widget", "Could not add widget")
               }
             }
           },
