@@ -45,4 +45,5 @@
   <string name="show_intro_again_settings">To show this intro screen again, tap \"%1$s\" in the app settings.</string>
   <string name="search_in">Search %1$s…</string>
   <string name="done">Done</string>
+    <string name="version">Version %1$s</string>
 </resources>

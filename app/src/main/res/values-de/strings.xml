@@ -44,4 +44,5 @@
   <string name="show_intro_again_settings">Um diese Einführung nochmals anzuzeigen, tippe auf \"%1$s\" in den App-Einstellungen.</string>
   <string name="search_in">Durchsuche %1$s…</string>
   <string name="done">Fertig</string>
+    <string name="version">Version %1$s</string>
 </resources>

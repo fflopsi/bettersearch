@@ -1,6 +1,5 @@
 package ch.frauenfelderflorian.bettersearch.ui.components
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
+import ch.frauenfelderflorian.bettersearch.BuildConfig
 import ch.frauenfelderflorian.bettersearch.R
 
 @Composable
@@ -45,26 +45,28 @@ fun InfoDialog(
     icon = { Icon(Icons.Default.Info, null) },
     title = { Text(text = stringResource(R.string.app_name)) },
     text = {
-      Column {
-        Text(
-          text = buildAnnotatedString {
-            append(stringResource(R.string.built_by))
-            append("\n")
-            withLink(
-              LinkAnnotation.Url(
-                stringResource(R.string.github_link),
-                TextLinkStyles(
-                  style = SpanStyle(
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textDecoration = TextDecoration.Underline,
-                  ),
+      Text(
+        text = buildAnnotatedString {
+          append(stringResource(R.string.built_by))
+          append("\n")
+          withLink(
+            LinkAnnotation.Url(
+              stringResource(R.string.github_link),
+              TextLinkStyles(
+                style = SpanStyle(
+                  color = MaterialTheme.colorScheme.tertiary,
+                  textDecoration = TextDecoration.Underline,
                 ),
-              )
-            ) { append(stringResource(R.string.github_link)) }
-          },
-          textAlign = TextAlign.Center,
-        )
-      }
+              ),
+            )
+          ) {
+            append(stringResource(R.string.github_link))
+          }
+          append("\n")
+          append(stringResource(R.string.version, BuildConfig.VERSION_NAME))
+        },
+        textAlign = TextAlign.Center,
+      )
     },
     confirmButton = {
       TextButton(onClick = { show.value = false }) { Text(text = stringResource(R.string.ok)) }
