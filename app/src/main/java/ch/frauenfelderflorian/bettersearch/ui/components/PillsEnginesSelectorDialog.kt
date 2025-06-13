@@ -29,15 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import ch.frauenfelderflorian.bettersearch.R
 import ch.frauenfelderflorian.bettersearch.models.SearchEngine
 import ch.frauenfelderflorian.bettersearch.models.searchEngines
+import ch.frauenfelderflorian.bettersearch.services.Setting
 
 @Composable
 fun PillsEnginesSelectorDialog(
   show: MutableState<Boolean>,
-  pillsEngines: List<SearchEngine>,
-  savePillsEngines: (List<SearchEngine>) -> Unit,
+  pillsEngines: Setting<List<SearchEngine>>,
   modifier: Modifier = Modifier,
 ) {
-  val pills = pillsEngines.toMutableStateList()
+  val pills = pillsEngines().toMutableStateList()
 
   if (show.value) {
     AlertDialog(
@@ -46,11 +46,7 @@ fun PillsEnginesSelectorDialog(
         TextButton(
           onClick = {
             show.value = false
-            if (pills.toList() != pillsEngines) {
-              // Necessary because saving the same list modified in order does NOT save the list
-              savePillsEngines(emptyList())
-              savePillsEngines(pills)
-            }
+            if (pills.toList() != pillsEngines) pillsEngines(pills)
           },
         ) {
           Text(text = stringResource(R.string.ok))

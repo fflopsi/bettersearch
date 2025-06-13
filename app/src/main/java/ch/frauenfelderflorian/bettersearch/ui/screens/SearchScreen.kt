@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import ch.frauenfelderflorian.bettersearch.R
 import ch.frauenfelderflorian.bettersearch.models.SearchEngine
+import ch.frauenfelderflorian.bettersearch.services.Setting
 import ch.frauenfelderflorian.bettersearch.services.room.HistoryEntry
 import ch.frauenfelderflorian.bettersearch.ui.components.InfoButton
 import ch.frauenfelderflorian.bettersearch.ui.components.InfoDialog
@@ -51,8 +52,7 @@ fun SearchScreen(
   suggestions: List<String>,
   historySuggestions: List<HistoryEntry>,
   deleteEntry: (HistoryEntry) -> Unit,
-  engine: SearchEngine,
-  saveEngine: (SearchEngine) -> Unit,
+  engine: Setting<SearchEngine>,
   showPills: Boolean,
   pillsEngines: List<SearchEngine>,
   onSubmit: (String) -> Unit,
@@ -72,7 +72,7 @@ fun SearchScreen(
     topBar = {
       TopAppBar(
         title = { Text(text = stringResource(R.string.app_name)) },
-        subtitle = { Text(text = engine.name) },
+        subtitle = { Text(text = engine().name) },
         actions = {
           Row {
             InfoButton(show = showInfo)
@@ -97,8 +97,8 @@ fun SearchScreen(
           items(pillsEngines) {
             FilterChip(
               label = { Text(text = it.name) },
-              selected = engine.id == it.id,
-              onClick = { saveEngine(it) },
+              selected = engine().id == it.id,
+              onClick = { engine(it) },
               modifier = Modifier.padding(horizontal = 4.dp),
             )
           }
@@ -107,7 +107,7 @@ fun SearchScreen(
       OutlinedTextField(
         state = query,
         label = { Text(text = stringResource(R.string.search)) },
-        placeholder = { Text(text = stringResource(R.string.search_in, engine.name)) },
+        placeholder = { Text(text = stringResource(R.string.search_in, engine().name)) },
         lineLimits = TextFieldLineLimits.SingleLine,
         trailingIcon = {
           Row {

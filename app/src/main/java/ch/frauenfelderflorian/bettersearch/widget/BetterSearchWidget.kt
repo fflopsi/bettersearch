@@ -22,8 +22,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import ch.frauenfelderflorian.bettersearch.MainActivity
 import ch.frauenfelderflorian.bettersearch.R
-import ch.frauenfelderflorian.bettersearch.models.searchEngines
-import ch.frauenfelderflorian.bettersearch.models.searchEnginesById
+import ch.frauenfelderflorian.bettersearch.models.getSearchEngine
 import ch.frauenfelderflorian.bettersearch.services.Prefs
 import ch.frauenfelderflorian.bettersearch.services.searchEngineFlow
 
@@ -31,9 +30,8 @@ class BetterSearchWidget : GlanceAppWidget() {
   override suspend fun provideGlance(context: Context, id: GlanceId) {
     provideContent {
       Scaffold {
-        val engine = searchEnginesById[context.searchEngineFlow.collectAsState(
-          initial = Prefs.Defaults.SEARCH_ENGINE,
-        ).value] ?: searchEngines[0]
+        val engine =
+          context.searchEngineFlow.collectAsState(initial = Prefs.Defaults.SEARCH_ENGINE).value.getSearchEngine()
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>()).padding(16.dp)

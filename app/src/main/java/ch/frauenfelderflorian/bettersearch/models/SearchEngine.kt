@@ -61,4 +61,4 @@ val searchEngines = listOf(
   ),
 )
 
-val searchEnginesById = searchEngines.associateBy { it.id }
+fun UUID.getSearchEngine() = searchEngines.associateBy { it.id }[this]!!

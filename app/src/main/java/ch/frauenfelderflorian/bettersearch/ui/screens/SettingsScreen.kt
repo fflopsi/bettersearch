@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import ch.frauenfelderflorian.bettersearch.R
 import ch.frauenfelderflorian.bettersearch.models.SearchEngine
 import ch.frauenfelderflorian.bettersearch.models.searchEngines
+import ch.frauenfelderflorian.bettersearch.services.Setting
 import ch.frauenfelderflorian.bettersearch.ui.components.InfoButton
 import ch.frauenfelderflorian.bettersearch.ui.components.InfoDialog
 import ch.frauenfelderflorian.bettersearch.ui.components.PillsEnginesSelectorDialog
@@ -43,20 +44,13 @@ import ch.frauenfelderflorian.bettersearch.ui.components.SettingsRow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-  engine: SearchEngine,
-  saveEngine: (SearchEngine) -> Unit,
-  showPills: Boolean,
-  saveShowPills: (Boolean) -> Unit,
-  pillsEngines: List<SearchEngine>,
-  savePillsEngines: (List<SearchEngine>) -> Unit,
-  suggestHistory: Boolean,
-  saveSuggestHistory: (Boolean) -> Unit,
-  suggestHistoryAllEngines: Boolean,
-  saveSuggestHistoryAllEngines: (Boolean) -> Unit,
-  theme: Int,
-  saveTheme: (Int) -> Unit,
-  dynamicColor: Boolean,
-  saveDynamicColor: (Boolean) -> Unit,
+  engine: Setting<SearchEngine>,
+  showPills: Setting<Boolean>,
+  pillsEngines: Setting<List<SearchEngine>>,
+  suggestHistory: Setting<Boolean>,
+  suggestHistoryAllEngines: Setting<Boolean>,
+  theme: Setting<Int>,
+  dynamicColor: Setting<Boolean>,
   navigateToIntro: () -> Unit,
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
@@ -81,11 +75,7 @@ fun SettingsScreen(
     modifier = modifier,
   ) { innerPadding ->
     InfoDialog(show = showInfo)
-    PillsEnginesSelectorDialog(
-      show = showPillsEnginesSelector,
-      pillsEngines = pillsEngines,
-      savePillsEngines = savePillsEngines,
-    )
+    PillsEnginesSelectorDialog(show = showPillsEnginesSelector, pillsEngines = pillsEngines)
 
     Column(
       modifier = Modifier
@@ -95,7 +85,7 @@ fun SettingsScreen(
     ) {
       SettingsRow(
         title = stringResource(R.string.search_engine),
-        subtitle = engine.name,
+        subtitle = engine().name,
         onClick = { searchEngineSelectorExpanded = true },
       ) {
         Box {
@@ -109,9 +99,9 @@ fun SettingsScreen(
                 text = { Text(text = it.name) },
                 onClick = {
                   searchEngineSelectorExpanded = false
-                  saveEngine(it)
+                  engine(it)
                 },
-                trailingIcon = { if (it.id == engine.id) Icon(Icons.Default.Check, null) },
+                trailingIcon = { if (it.id == engine().id) Icon(Icons.Default.Check, null) },
               )
             }
           }
@@ -120,17 +110,17 @@ fun SettingsScreen(
       SettingsRow(
         title = stringResource(R.string.show_quick_engines),
         subtitle = stringResource(R.string.show_quick_engines_desc),
-        onClick = { saveShowPills(!showPills) },
+        onClick = { showPills(!showPills()) },
         modifier = Modifier.height(IntrinsicSize.Min),
       ) {
-        Switch(checked = showPills, onCheckedChange = null)
+        Switch(checked = showPills(), onCheckedChange = null)
       }
       SettingsRow(
         title = stringResource(R.string.select_quick_engines),
-        subtitle = pillsEngines.map { it.name }.ifEmpty { stringResource(R.string.none_selected) }
+        subtitle = pillsEngines().map { it.name }.ifEmpty { stringResource(R.string.none_selected) }
           .toString(),
         // Instead of AnimatedVisibility
-        enabled = showPills,
+        enabled = showPills(),
         onClick = { showPillsEnginesSelector.value = true },
       ) {
         Icon(Icons.AutoMirrored.Filled.NavigateNext, null)
@@ -138,23 +128,23 @@ fun SettingsScreen(
       SettingsRow(
         title = stringResource(R.string.suggest_from_history),
         subtitle = stringResource(R.string.suggest_from_history_desc),
-        onClick = { saveSuggestHistory(!suggestHistory) },
+        onClick = { suggestHistory(!suggestHistory()) },
       ) {
-        Switch(checked = suggestHistory, onCheckedChange = null)
+        Switch(checked = suggestHistory(), onCheckedChange = null)
       }
       SettingsRow(
         title = stringResource(R.string.suggest_from_all_engines_history),
         subtitle = stringResource(R.string.suggest_from_all_engines_history_desc),
-        enabled = suggestHistory,
-        onClick = { saveSuggestHistoryAllEngines(!suggestHistoryAllEngines) },
+        enabled = suggestHistory(),
+        onClick = { suggestHistoryAllEngines(!suggestHistoryAllEngines()) },
       ) {
-        Switch(checked = suggestHistoryAllEngines, onCheckedChange = null)
+        Switch(checked = suggestHistoryAllEngines(), onCheckedChange = null)
       }
       HorizontalDivider()
       SettingsRow(
         title = stringResource(R.string.theme),
         subtitle = stringResource(
-          when (theme) {
+          when (theme()) {
             1 -> R.string.light
             2 -> R.string.dark
             else -> R.string.auto
@@ -170,27 +160,27 @@ fun SettingsScreen(
           ) {
             DropdownMenuItem(
               text = { Text(text = stringResource(R.string.auto)) },
-              onClick = { saveTheme(0) },
+              onClick = { theme(0) },
               leadingIcon = { Icon(Icons.Default.BrightnessAuto, null) },
               trailingIcon = {
-                if (theme == 0) Icon(Icons.Default.Check, stringResource(R.string.active))
+                if (theme() == 0) Icon(Icons.Default.Check, stringResource(R.string.active))
               },
             )
             HorizontalDivider()
             DropdownMenuItem(
               text = { Text(text = stringResource(R.string.light)) },
-              onClick = { saveTheme(1) },
+              onClick = { theme(1) },
               leadingIcon = { Icon(Icons.Default.LightMode, null) },
               trailingIcon = {
-                if (theme == 1) Icon(Icons.Default.Check, stringResource(R.string.active))
+                if (theme() == 1) Icon(Icons.Default.Check, stringResource(R.string.active))
               },
             )
             DropdownMenuItem(
               text = { Text(text = stringResource(R.string.dark)) },
-              onClick = { saveTheme(2) },
+              onClick = { theme(2) },
               leadingIcon = { Icon(Icons.Default.DarkMode, null) },
               trailingIcon = {
-                if (theme == 2) Icon(Icons.Default.Check, stringResource(R.string.active))
+                if (theme() == 2) Icon(Icons.Default.Check, stringResource(R.string.active))
               },
             )
           }
@@ -198,9 +188,9 @@ fun SettingsScreen(
       }
       SettingsRow(
         title = stringResource(R.string.use_dynamic_colors),
-        onClick = { saveDynamicColor(!dynamicColor) },
+        onClick = { dynamicColor(!dynamicColor()) },
       ) {
-        Switch(checked = dynamicColor, onCheckedChange = null)
+        Switch(checked = dynamicColor(), onCheckedChange = null)
       }
       HorizontalDivider()
       SettingsRow(
