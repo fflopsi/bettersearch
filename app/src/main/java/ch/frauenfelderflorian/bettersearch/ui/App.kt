@@ -8,12 +8,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
@@ -42,6 +44,7 @@ import ch.frauenfelderflorian.bettersearch.ui.screens.SearchScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.SettingsScreen
 import ch.frauenfelderflorian.bettersearch.ui.theme.BetterSearchTheme
 import ch.frauenfelderflorian.bettersearch.widget.BetterSearchWidgetReceiver
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -68,7 +71,9 @@ fun BetterSearchApp(
   val historyEngine by historyDao.getAllFromEngine(engine().id).collectAsStateWithLifecycle(
     initialValue = emptyList(),
   )
-  val history = if (suggestHistoryAllEngines()) historyAll else historyEngine
+  val history by remember {
+    derivedStateOf { if (suggestHistoryAllEngines()) historyAll else historyEngine }
+  }
 
   val queryValue by rememberSaveable(
     saver = Saver(
@@ -80,23 +85,31 @@ fun BetterSearchApp(
   ) {
     mutableStateOf(TextFieldState(query))
   }
-  var suggestions by rememberSaveable { mutableStateOf(emptyList<String>()) }
-  var historySuggestions by rememberSaveable { mutableStateOf(emptyList<HistoryEntry>()) }
-
-  LaunchedEffect(queryValue.text) {
-    suggestions = fetchSuggestions(queryValue.text.toString(), engine())
+  val suggestions by produceState(
+    initialValue = emptyList<String>(),
+    key1 = queryValue.text,
+    key2 = engine(),
+  ) {
+    delay(100)
+    value = fetchSuggestions(queryValue.text.toString(), engine())
   }
-  LaunchedEffect(queryValue.text, history) {
-    historySuggestions = if (queryValue.text.isNotBlank() && suggestHistory()) {
-      history.sortedByDescending { it.time }.filter {
-        it.query.startsWith(queryValue.text.toString()) || isFuzzyMatch(
-          queryValue.text.toString(), it.query
-        )
+  val historySuggestions by remember(
+    key1 = queryValue.text,
+    key2 = history,
+    key3 = suggestHistory(),
+  ) {
+    derivedStateOf {
+      if (queryValue.text.isNotBlank() && suggestHistory()) {
+        history.sortedByDescending { it.time }.filter {
+          it.query.startsWith(queryValue.text.toString()) || isFuzzyMatch(
+            queryValue.text.toString(), it.query
+          )
+        }
+      } else if (suggestHistory()) {
+        history.sortedByDescending { it.time }.take(5)
+      } else {
+        emptyList()
       }
-    } else if (suggestHistory()) {
-      history.sortedByDescending { it.time }.take(5)
-    } else {
-      emptyList()
     }
   }
 
