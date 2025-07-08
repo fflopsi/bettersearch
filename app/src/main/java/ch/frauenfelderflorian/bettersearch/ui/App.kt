@@ -2,7 +2,8 @@ package ch.frauenfelderflorian.bettersearch.ui
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
-import android.os.Build
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -100,7 +102,7 @@ fun BetterSearchApp(
   }
 
   // Delete the 10 oldest entries from the most-used engine if there are more than 10000 in total
-  LaunchedEffect(historyAll) {
+  LaunchedEffect(historyAll.size) {
     if (historyAll.size > 10000) {
       searchEngines.map { historyDao.getAllFromEngine(it.id).first() }.maxByOrNull { it.size }
         ?.take(10)?.forEach { historyDao.delete(it) }
@@ -118,6 +120,10 @@ fun BetterSearchApp(
     NavHost(
       navController = navController,
       startDestination = if (introDone) Search else Intro,
+      enterTransition = { slideIn { IntOffset(it.width, 0) } },
+      exitTransition = { slideOut { IntOffset(-it.width, 0) } },
+      popEnterTransition = { slideIn { IntOffset(-it.width, 0) } },
+      popExitTransition = { slideOut { IntOffset(it.width, 0) } },
       modifier = modifier,
     ) {
       composable<Search> {
@@ -155,12 +161,10 @@ fun BetterSearchApp(
         IntroScreen(
           saveIntroDone = { scope.launch { context.saveIntroDone(it) } },
           addWidget = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-              val manager = AppWidgetManager.getInstance(context)
-              val provider = ComponentName(context, BetterSearchWidgetReceiver::class.java)
-              if (manager.isRequestPinAppWidgetSupported) {
-                manager.requestPinAppWidget(provider, null, null)
-              }
+            val manager = AppWidgetManager.getInstance(context)
+            val provider = ComponentName(context, BetterSearchWidgetReceiver::class.java)
+            if (manager.isRequestPinAppWidgetSupported) {
+              manager.requestPinAppWidget(provider, null, null)
             }
           },
           navigateToSearch = { navController.navigate(Search) { popUpTo(0) { inclusive = true } } },
