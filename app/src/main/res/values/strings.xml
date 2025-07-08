@@ -65,4 +65,5 @@
   </plurals>
   <string name="yesterday">yesterday</string>
   <string name="at_time_with_engine">%1$s, with %2$s</string>
+  <string name="search_history_empty">Search history empty</string>
 </resources>

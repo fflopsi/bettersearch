@@ -34,14 +34,15 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.frauenfelderflorian.bettersearch.R
@@ -72,7 +73,7 @@ fun HistoryScreen(
   val context = LocalContext.current
 
   var searchEngineSelectorExpanded by remember { mutableStateOf(false) }
-  var selectedSearchEngine: SearchEngine? by rememberSaveable { mutableStateOf(null) }
+  var selectedSearchEngine: SearchEngine? by remember { mutableStateOf(null) }
   val selectedSearchEngineText by remember {
     derivedStateOf { TextFieldState(selectedSearchEngine?.name ?: context.getString(R.string.all)) }
   }
@@ -139,6 +140,20 @@ fun HistoryScreen(
         }
       }
       LazyColumn(modifier = Modifier.fillMaxHeight()) {
+        item(key = 0) {
+          AnimatedVisibility(
+            visible = selectedSearchEngine?.run { history.none { this.id == it.engineId } }
+              ?: history.isEmpty(),
+            modifier = Modifier.animateItem(),
+          ) {
+            Text(
+              text = stringResource(R.string.search_history_empty),
+              fontStyle = FontStyle.Italic,
+              textAlign = TextAlign.Center,
+              modifier = Modifier.fillMaxWidth(),
+            )
+          }
+        }
         items(
           items = history.sortedByDescending { it.time },
           key = { it.time },
