@@ -140,16 +140,28 @@ fun SearchScreen(
           .fillMaxWidth(),
       )
       LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        items(historySuggestions) {
+        items(
+          items = historySuggestions,
+          key = { it.time },
+        ) {
           SuggestionRow(
             entry = it,
             queryState = query,
             onDelete = { deleteEntry(it) },
             onSubmit = { onSubmit(it.query) },
+            modifier = Modifier.animateItem(),
           )
         }
-        items(suggestions) {
-          SuggestionRow(text = it, queryState = query, onSubmit = { onSubmit(it) })
+        items(
+          items = suggestions,
+          key = { it },
+        ) {
+          SuggestionRow(
+            text = it,
+            queryState = query,
+            onSubmit = { onSubmit(it) },
+            modifier = Modifier.animateItem(),
+          )
         }
       }
     }

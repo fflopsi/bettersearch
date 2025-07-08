@@ -1,5 +1,6 @@
 package ch.frauenfelderflorian.bettersearch.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,15 +62,24 @@ fun PillsEnginesSelectorDialog(
       title = { Text(text = stringResource(R.string.select_quick_engines)) },
       text = {
         LazyColumn {
-          itemsIndexed(pills) { index, item ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-              Text(text = item.name, modifier = Modifier.weight(1f))
-              if (index < pills.lastIndex) {
+          itemsIndexed(
+            items = pills,
+            key = { _, item -> item.id },
+          ) { index, item ->
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.animateItem(),
+            ) {
+              Text(
+                text = item.name,
+                modifier = Modifier.weight(1f),
+              )
+              AnimatedVisibility(visible = index < pills.lastIndex) {
                 IconButton(onClick = { pills.add(index + 1, pills.removeAt(index)) }) {
                   Icon(Icons.Default.KeyboardArrowDown, stringResource(R.string.move_down))
                 }
               }
-              if (index > 0) {
+              AnimatedVisibility(visible = index > 0) {
                 IconButton(onClick = { pills.add(index - 1, pills.removeAt(index)) }) {
                   Icon(Icons.Default.KeyboardArrowUp, stringResource(R.string.move_up))
                 }
@@ -80,8 +90,8 @@ fun PillsEnginesSelectorDialog(
             }
           }
           if ((searchEngines - pills).isNotEmpty()) {
-            item {
-              Column {
+            item(key = 0) {
+              Column(modifier = Modifier.animateItem()) {
                 HorizontalDivider()
                 Text(
                   text = stringResource(R.string.available_search_engines),
@@ -92,9 +102,18 @@ fun PillsEnginesSelectorDialog(
               }
             }
           }
-          items(searchEngines - pills) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-              Text(text = it.name, modifier = Modifier.weight(1f))
+          items(
+            items = searchEngines - pills,
+            key = { it.id },
+          ) {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.animateItem(),
+            ) {
+              Text(
+                text = it.name,
+                modifier = Modifier.weight(1f),
+              )
               IconButton(onClick = { pills.add(it) }) {
                 Icon(Icons.Default.Add, stringResource(R.string.add))
               }
