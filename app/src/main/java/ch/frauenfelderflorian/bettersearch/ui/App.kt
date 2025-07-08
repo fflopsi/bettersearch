@@ -71,7 +71,7 @@ fun BetterSearchApp(
   val historyEngine by historyDao.getAllFromEngine(engine().id).collectAsStateWithLifecycle(
     initialValue = emptyList(),
   )
-  val history by remember {
+  val history by remember(suggestHistoryAllEngines()) {
     derivedStateOf { if (suggestHistoryAllEngines()) historyAll else historyEngine }
   }
 
