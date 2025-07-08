@@ -37,6 +37,7 @@ import ch.frauenfelderflorian.bettersearch.services.startSearchIntent
 import ch.frauenfelderflorian.bettersearch.services.suggestHistoryAllEnginesSetting
 import ch.frauenfelderflorian.bettersearch.services.suggestHistorySetting
 import ch.frauenfelderflorian.bettersearch.services.themeSetting
+import ch.frauenfelderflorian.bettersearch.ui.screens.HistoryScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.IntroScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.SearchScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.SettingsScreen
@@ -142,6 +143,7 @@ fun BetterSearchApp(
             }
           },
           navigateToSettings = { navController.navigate(Settings) { it() } },
+          navigateToHistory = { navController.navigate(History) { it() } },
         )
       }
       composable<Settings> {
@@ -154,7 +156,21 @@ fun BetterSearchApp(
           theme = theme,
           dynamicColor = dynamicColor,
           navigateToIntro = { navController.navigate(Intro) },
+          navigateToHistory = { navController.navigate(History) },
           navigateUp = navController::navigateUp,
+        )
+      }
+      composable<History> {
+        HistoryScreen(
+          history = history,
+          searchEntry = {
+            scope.launch {
+              startSearchIntent(context, it, engine())
+              historyDao.insert(HistoryEntry(engine().id, it, System.currentTimeMillis()))
+            }
+          },
+          deleteEntry = { scope.launch { historyDao.delete(it) } },
+          navigateUp = { navController.navigateUp() },
         )
       }
       composable<Intro> {

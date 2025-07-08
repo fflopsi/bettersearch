@@ -45,5 +45,24 @@
   <string name="show_intro_again_settings">To show this intro screen again, tap \"%1$s\" in the app settings.</string>
   <string name="search_in">Search %1$s…</string>
   <string name="done">Done</string>
-    <string name="version">Version %1$s</string>
+  <string name="version">Version %1$s</string>
+  <string name="show_search_history">Show search history…</string>
+  <string name="show_search_history_desc">Show and edit search history</string>
+  <string name="search_history">Search history</string>
+  <string name="all">All</string>
+  <string name="just_now">just now</string>
+  <plurals name="minutes_ago">
+    <item quantity="one">%1$s minute ago</item>
+    <item quantity="other">%1$s minutes ago</item>
+  </plurals>
+  <plurals name="hours_ago">
+    <item quantity="one">%1$s hour ago</item>
+    <item quantity="other">%1$s hours ago</item>
+  </plurals>
+  <plurals name="days_ago">
+    <item quantity="one">%1$s day ago</item>
+    <item quantity="other">%1$s days ago</item>
+  </plurals>
+  <string name="yesterday">yesterday</string>
+  <string name="at_time_with_engine">%1$s, with %2$s</string>
 </resources>

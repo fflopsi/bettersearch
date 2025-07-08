@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +58,7 @@ fun SearchScreen(
   pillsEngines: List<SearchEngine>,
   onSubmit: (String) -> Unit,
   navigateToSettings: (() -> Unit) -> Unit,
+  navigateToHistory: (() -> Unit) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val focusRequester = remember { FocusRequester() }
@@ -76,6 +78,9 @@ fun SearchScreen(
         actions = {
           Row {
             InfoButton(show = showInfo)
+            IconButton(onClick = { navigateToHistory { keyboardController?.hide() } }) {
+              Icon(Icons.Default.History, stringResource(R.string.search_history))
+            }
             IconButton(onClick = { navigateToSettings { keyboardController?.hide() } }) {
               Icon(Icons.Default.Settings, stringResource(R.string.settings))
             }

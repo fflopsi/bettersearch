@@ -54,6 +54,7 @@ fun SettingsScreen(
   theme: Setting<Int>,
   dynamicColor: Setting<Boolean>,
   navigateToIntro: () -> Unit,
+  navigateToHistory: () -> Unit,
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -142,6 +143,13 @@ fun SettingsScreen(
         onClick = { suggestHistoryAllEngines(!suggestHistoryAllEngines()) },
       ) {
         Switch(checked = suggestHistoryAllEngines(), onCheckedChange = null)
+      }
+      SettingsRow(
+        title = stringResource(R.string.show_search_history),
+        subtitle = stringResource(R.string.show_search_history_desc),
+        onClick = navigateToHistory,
+      ) {
+        Icon(Icons.AutoMirrored.Filled.NavigateNext, null)
       }
       HorizontalDivider()
       SettingsRow(

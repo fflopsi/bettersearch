@@ -10,3 +10,6 @@ object Settings
 
 @Serializable
 object Intro
+
+@Serializable
+object History
