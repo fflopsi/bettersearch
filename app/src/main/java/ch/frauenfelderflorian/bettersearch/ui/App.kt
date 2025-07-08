@@ -24,20 +24,29 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ch.frauenfelderflorian.bettersearch.models.getSearchEngine
 import ch.frauenfelderflorian.bettersearch.models.searchEngines
-import ch.frauenfelderflorian.bettersearch.services.dynamicColorSetting
+import ch.frauenfelderflorian.bettersearch.services.Prefs
+import ch.frauenfelderflorian.bettersearch.services.dynamicColorFlow
 import ch.frauenfelderflorian.bettersearch.services.fetchSuggestions
 import ch.frauenfelderflorian.bettersearch.services.isFuzzyMatch
-import ch.frauenfelderflorian.bettersearch.services.pillsEnginesSetting
+import ch.frauenfelderflorian.bettersearch.services.pillsEnginesFlow
 import ch.frauenfelderflorian.bettersearch.services.room.HistoryDao
 import ch.frauenfelderflorian.bettersearch.services.room.HistoryEntry
+import ch.frauenfelderflorian.bettersearch.services.saveDynamicColor
 import ch.frauenfelderflorian.bettersearch.services.saveIntroDone
-import ch.frauenfelderflorian.bettersearch.services.searchEngineSetting
-import ch.frauenfelderflorian.bettersearch.services.showPillsSetting
+import ch.frauenfelderflorian.bettersearch.services.savePillsEngines
+import ch.frauenfelderflorian.bettersearch.services.saveSearchEngine
+import ch.frauenfelderflorian.bettersearch.services.saveShowPills
+import ch.frauenfelderflorian.bettersearch.services.saveSuggestHistory
+import ch.frauenfelderflorian.bettersearch.services.saveSuggestHistoryAllEngines
+import ch.frauenfelderflorian.bettersearch.services.saveTheme
+import ch.frauenfelderflorian.bettersearch.services.searchEngineFlow
+import ch.frauenfelderflorian.bettersearch.services.showPillsFlow
 import ch.frauenfelderflorian.bettersearch.services.startSearchIntent
-import ch.frauenfelderflorian.bettersearch.services.suggestHistoryAllEnginesSetting
-import ch.frauenfelderflorian.bettersearch.services.suggestHistorySetting
-import ch.frauenfelderflorian.bettersearch.services.themeSetting
+import ch.frauenfelderflorian.bettersearch.services.suggestHistoryAllEnginesFlow
+import ch.frauenfelderflorian.bettersearch.services.suggestHistoryFlow
+import ch.frauenfelderflorian.bettersearch.services.themeFlow
 import ch.frauenfelderflorian.bettersearch.ui.screens.HistoryScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.IntroScreen
 import ch.frauenfelderflorian.bettersearch.ui.screens.SearchScreen
@@ -59,20 +68,31 @@ fun BetterSearchApp(
   val scope = rememberCoroutineScope()
   val navController = rememberNavController()
 
-  val engine = context.searchEngineSetting(scope)
-  val showPills = context.showPillsSetting(scope)
-  val pillsEngines = context.pillsEnginesSetting(scope)
-  val suggestHistory = context.suggestHistorySetting(scope)
-  val suggestHistoryAllEngines = context.suggestHistoryAllEnginesSetting(scope)
-  val theme = context.themeSetting(scope)
-  val dynamicColor = context.dynamicColorSetting(scope)
+  val engine = context.searchEngineFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.SEARCH_ENGINE,
+  ).value.getSearchEngine()
+  val showPills by context.showPillsFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.SHOW_PILLS,
+  )
+  val pillsEngines = context.pillsEnginesFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.PILLS_ENGINES,
+  ).value.map { it.getSearchEngine() }
+  val suggestHistory by context.suggestHistoryFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.SUGGEST_HISTORY,
+  )
+  val suggestHistoryAllEngines by context.suggestHistoryAllEnginesFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.SUGGEST_HISTORY_ALL_ENGINES,
+  )
+  val theme by context.themeFlow.collectAsStateWithLifecycle(initialValue = Prefs.Defaults.THEME)
+  val dynamicColor by context.dynamicColorFlow.collectAsStateWithLifecycle(
+    initialValue = Prefs.Defaults.DYNAMIC_COLOR,
+  )
 
   val historyAll by historyDao.getAll().collectAsStateWithLifecycle(initialValue = emptyList())
-  val historyEngine by historyDao.getAllFromEngine(engine().id).collectAsStateWithLifecycle(
-    initialValue = emptyList(),
-  )
-  val history by remember(suggestHistoryAllEngines()) {
-    derivedStateOf { if (suggestHistoryAllEngines()) historyAll else historyEngine }
+  val historyEngine by historyDao.getAllFromEngine(engine.id)
+    .collectAsStateWithLifecycle(initialValue = emptyList())
+  val history by remember(suggestHistoryAllEngines) {
+    derivedStateOf { if (suggestHistoryAllEngines) historyAll else historyEngine }
   }
 
   val queryValue by rememberSaveable(
@@ -88,24 +108,24 @@ fun BetterSearchApp(
   val suggestions by produceState(
     initialValue = emptyList<String>(),
     key1 = queryValue.text,
-    key2 = engine(),
+    key2 = engine,
   ) {
     delay(100)
-    value = fetchSuggestions(queryValue.text.toString(), engine())
+    value = fetchSuggestions(queryValue.text.toString(), engine)
   }
   val historySuggestions by remember(
     key1 = queryValue.text,
     key2 = history,
-    key3 = suggestHistory(),
+    key3 = suggestHistory,
   ) {
     derivedStateOf {
-      if (queryValue.text.isNotBlank() && suggestHistory()) {
+      if (queryValue.text.isNotBlank() && suggestHistory) {
         history.sortedByDescending { it.time }.filter {
           it.query.startsWith(queryValue.text.toString()) || isFuzzyMatch(
             queryValue.text.toString(), it.query
           )
         }
-      } else if (suggestHistory()) {
+      } else if (suggestHistory) {
         history.sortedByDescending { it.time }.take(5)
       } else {
         emptyList()
@@ -122,12 +142,12 @@ fun BetterSearchApp(
   }
 
   BetterSearchTheme(
-    darkTheme = when (theme()) {
+    darkTheme = when (theme) {
       1 -> false
       2 -> true
       else -> isSystemInDarkTheme()
     },
-    dynamicColor = dynamicColor(),
+    dynamicColor = dynamicColor,
   ) {
     NavHost(
       navController = navController,
@@ -145,12 +165,13 @@ fun BetterSearchApp(
           historySuggestions = historySuggestions,
           deleteEntry = { scope.launch { historyDao.delete(it) } },
           engine = engine,
-          showPills = showPills(),
-          pillsEngines = pillsEngines(),
+          saveEngine = { scope.launch { context.saveSearchEngine(it) } },
+          showPills = showPills,
+          pillsEngines = pillsEngines,
           onSubmit = {
-            startSearchIntent(context, it, engine())
+            startSearchIntent(context, it, engine)
             scope.launch {
-              historyDao.insert(HistoryEntry(engine().id, it, System.currentTimeMillis()))
+              historyDao.insert(HistoryEntry(engine.id, it, System.currentTimeMillis()))
             }
           },
           navigateToSettings = { navController.navigate(Settings) { it() } },
@@ -160,12 +181,21 @@ fun BetterSearchApp(
       composable<Settings> {
         SettingsScreen(
           engine = engine,
+          saveEngine = { scope.launch { context.saveSearchEngine(it) } },
           showPills = showPills,
+          saveShowPills = { scope.launch { context.saveShowPills(it) } },
           pillsEngines = pillsEngines,
+          savePillsEngines = { scope.launch { context.savePillsEngines(it) } },
           suggestHistory = suggestHistory,
+          saveSuggestHistory = { scope.launch { context.saveSuggestHistory(it) } },
           suggestHistoryAllEngines = suggestHistoryAllEngines,
+          saveSuggestHistoryAllEngines = {
+            scope.launch { context.saveSuggestHistoryAllEngines(it) }
+          },
           theme = theme,
+          saveTheme = { scope.launch { context.saveTheme(it) } },
           dynamicColor = dynamicColor,
+          saveDynamicColor = { scope.launch { context.saveDynamicColor(it) } },
           navigateToIntro = { navController.navigate(Intro) },
           navigateToHistory = { navController.navigate(History) },
           navigateUp = navController::navigateUp,
@@ -175,9 +205,9 @@ fun BetterSearchApp(
         HistoryScreen(
           history = history,
           searchEntry = {
-            startSearchIntent(context, it, engine())
+            startSearchIntent(context, it, engine)
             scope.launch {
-              historyDao.insert(HistoryEntry(engine().id, it, System.currentTimeMillis()))
+              historyDao.insert(HistoryEntry(engine.id, it, System.currentTimeMillis()))
             }
           },
           deleteEntry = { scope.launch { historyDao.delete(it) } },
