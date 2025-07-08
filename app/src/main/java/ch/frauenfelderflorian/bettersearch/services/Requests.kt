@@ -6,6 +6,8 @@ import androidx.core.net.toUri
 import ch.frauenfelderflorian.bettersearch.models.SearchEngine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Headers.Companion.headersOf
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -14,23 +16,22 @@ import java.net.URLEncoder
 suspend fun fetchSuggestions(query: String, engine: SearchEngine): List<String> {
   if (query.isBlank()) return emptyList()
 
-  val builder = Request.Builder().url(
-    "${engine.suggestionUrl}${URLEncoder.encode(query, "UTF-8")}"
+  val request = Request(
+    url = "${engine.suggestionUrl}${URLEncoder.encode(query, "UTF-8")}".toHttpUrl(),
+    headers = if (engine.id == searchEngineUuid(4)) {
+      headersOf(
+        "User-Agent", "Mozilla/5.0 (Android 15; Mobile; rv:139.0) Gecko/139.0 Firefox/139.0",
+      )
+    } else {
+      headersOf()
+    }
   )
-  val request = if (engine.id == searchEngineUuid(4)) {
-    builder.header(
-      name = "User-Agent",
-      value = "Mozilla/5.0 (Android 15; Mobile; rv:139.0) Gecko/139.0 Firefox/139.0",
-    ).build()
-  } else {
-    builder.build()
-  }
 
   return withContext(Dispatchers.IO) {
     try {
       OkHttpClient().newCall(request).execute().use {
         if (!it.isSuccessful) return@withContext emptyList()
-        val body = it.body?.string() ?: return@withContext emptyList()
+        val body = it.body.string()
 
         val json = JSONArray(body)
         val suggestions = if (engine.id == searchEngineUuid(5)) json else json.getJSONArray(1)

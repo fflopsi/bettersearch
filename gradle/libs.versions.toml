@@ -1,8 +1,8 @@
 [versions]
 app = "1.0"
 agp = "8.10.1"
-kotlin = "2.1.21"
-ksp = "2.1.21-2.0.1"
+kotlin = "2.2.0"
+ksp = "2.2.0-2.0.2"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -15,9 +15,9 @@ navigation = "2.9.1"
 datastore = "1.1.7"
 room = "2.7.2"
 glance = "1.1.1"
-serialization = "1.7.3"
-datetime = "0.7.0"
-okhttp = "4.12.0"
+serialization = "1.9.0"
+datetime = "0.7.1"
+okhttp = "5.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
