@@ -1,5 +1,6 @@
 package ch.frauenfelderflorian.bettersearch.ui.screens
 
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -207,11 +208,13 @@ fun SettingsScreen(
           }
         }
       }
-      SettingsRow(
-        title = stringResource(R.string.use_dynamic_colors),
-        onClick = { saveDynamicColor(!dynamicColor) },
-      ) {
-        Switch(checked = dynamicColor, onCheckedChange = null)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        SettingsRow(
+          title = stringResource(R.string.use_dynamic_colors),
+          onClick = { saveDynamicColor(!dynamicColor) },
+        ) {
+          Switch(checked = dynamicColor, onCheckedChange = null)
+        }
       }
       HorizontalDivider()
       SettingsRow(
