@@ -63,9 +63,8 @@ fun SearchScreen(
 ) {
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
-  LaunchedEffect(Unit) {
+  LaunchedEffect(focusRequester) {
     focusRequester.requestFocus()
-    keyboardController?.show()
   }
 
   val showInfo = remember { mutableStateOf(false) }
@@ -129,9 +128,7 @@ fun SearchScreen(
             }
           }
         },
-        keyboardOptions = KeyboardOptions.Default.copy(
-          imeAction = if (query.text.isNotBlank()) ImeAction.Search else ImeAction.Unspecified,
-        ),
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
         onKeyboardAction = {
           if (query.text.isNotBlank()) {
             onSubmit(query.text.toString())
