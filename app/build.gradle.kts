@@ -13,7 +13,7 @@ android {
 
   defaultConfig {
     applicationId = "ch.frauenfelderflorian.bettersearch"
-    minSdk = 24
+    minSdk = 26
     targetSdk = 35
     versionCode = 1
     versionName = libs.versions.app.get()
@@ -63,6 +63,7 @@ dependencies {
   implementation(libs.androidx.glance)
   implementation(libs.androidx.glance.material3)
   implementation(libs.kotlinx.serialization)
+  implementation(libs.kotlinx.datetime)
   implementation(libs.okhttp3)
 
   testImplementation(libs.junit)
