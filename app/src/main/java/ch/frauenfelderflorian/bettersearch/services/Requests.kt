@@ -15,7 +15,7 @@ suspend fun fetchSuggestions(query: String, engine: SearchEngine): List<String> 
   if (query.isBlank()) return emptyList()
 
   val builder = Request.Builder().url(
-    "${engine.suggestionUrl}${withContext(Dispatchers.IO) { URLEncoder.encode(query, "UTF-8") }}"
+    "${engine.suggestionUrl}${URLEncoder.encode(query, "UTF-8")}"
   )
   val request = if (engine.id == searchEngineUuid(4)) {
     builder.header(
@@ -42,7 +42,7 @@ suspend fun fetchSuggestions(query: String, engine: SearchEngine): List<String> 
   }
 }
 
-suspend fun startSearchIntent(context: Context, query: String, engine: SearchEngine) {
-  val url = engine.searchUrl + withContext(Dispatchers.IO) { URLEncoder.encode(query, "UTF-8") }
+fun startSearchIntent(context: Context, query: String, engine: SearchEngine) {
+  val url = engine.searchUrl + URLEncoder.encode(query, "UTF-8")
   context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()), null)
 }

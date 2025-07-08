@@ -135,8 +135,8 @@ fun BetterSearchApp(
           showPills = showPills(),
           pillsEngines = pillsEngines(),
           onSubmit = {
+            startSearchIntent(context, it, engine())
             scope.launch {
-              startSearchIntent(context, it, engine())
               historyDao.insert(HistoryEntry(engine().id, it, System.currentTimeMillis()))
             }
           },
@@ -162,8 +162,8 @@ fun BetterSearchApp(
         HistoryScreen(
           history = history,
           searchEntry = {
+            startSearchIntent(context, it, engine())
             scope.launch {
-              startSearchIntent(context, it, engine())
               historyDao.insert(HistoryEntry(engine().id, it, System.currentTimeMillis()))
             }
           },
