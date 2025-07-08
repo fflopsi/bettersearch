@@ -59,6 +59,25 @@ val searchEngines = listOf(
     suggestionUrl = "https://search.yahoo.com/sugg/gossip/gossip-us-ura/?output=fxjson&command=",
     searchUrl = "https://search.yahoo.com/search?p=",
   ),
+  SearchEngine(
+    id = searchEngineUuid(8),
+    name = "YouTube",
+    suggestionUrl = "https://suggestqueries.google.com/complete/search?ds=yt&client=firefox&q=",
+    searchUrl = "https://www.youtube.com/search?q=",
+  ),
+  SearchEngine(
+    id = searchEngineUuid(9),
+    name = "Wikipedia (English)",
+    suggestionUrl = "https://wikipedia.org/w/api.php?action=opensearch&search=",
+    // Maybe improve this as they provide links in the suggestions themselves
+    searchUrl = "https://wikipedia.org/wiki/Special:Search?search=",
+  ),
+  SearchEngine(
+    id = searchEngineUuid(10),
+    name = "Reddit",
+    suggestionUrl = "https://www.reddit.com/api/search_reddit_names.json?query=",
+    searchUrl = "https://www.reddit.com/search/?q=",
+  ),
 )
 
 fun UUID.getSearchEngine() = searchEngines.associateBy { it.id }[this]!!

@@ -11,6 +11,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import org.json.JSONObject
 import java.net.URLEncoder
 
 suspend fun fetchSuggestions(query: String, engine: SearchEngine): List<String> {
@@ -32,9 +33,11 @@ suspend fun fetchSuggestions(query: String, engine: SearchEngine): List<String> 
       OkHttpClient().newCall(request).execute().use {
         if (!it.isSuccessful) return@withContext emptyList()
         val body = it.body.string()
-
-        val json = JSONArray(body)
-        val suggestions = if (engine.id == searchEngineUuid(5)) json else json.getJSONArray(1)
+        val suggestions = when (engine.id) {
+          searchEngineUuid(5) -> JSONArray(body)
+          searchEngineUuid(10) -> JSONObject(body).getJSONArray("names")
+          else -> JSONArray(body).getJSONArray(1)
+        }
         List(suggestions.length()) { i -> suggestions.getString(i) }
       }
     } catch (e: Exception) {
