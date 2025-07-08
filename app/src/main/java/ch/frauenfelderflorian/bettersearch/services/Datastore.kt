@@ -37,7 +37,7 @@ object Prefs {
     val PILLS_ENGINES = listOf(searchEngineUuid(0), searchEngineUuid(1), searchEngineUuid(2))
     const val SUGGEST_HISTORY = true
     const val SUGGEST_HISTORY_ALL_ENGINES = true
-    const val INTRO_DONE = true
+    const val INTRO_DONE = false
   }
 }
 
