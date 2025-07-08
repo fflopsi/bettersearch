@@ -6,13 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.room.Room
+import ch.frauenfelderflorian.bettersearch.services.introDoneFlow
 import ch.frauenfelderflorian.bettersearch.services.room.BetterSearchDatabase
 import ch.frauenfelderflorian.bettersearch.ui.BetterSearchApp
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
 
     val db = Room.databaseBuilder(
       context = applicationContext,
@@ -23,6 +25,15 @@ class MainActivity : ComponentActivity() {
 
     val query = intent?.getStringExtra(SearchManager.QUERY)
 
-    setContent { BetterSearchApp(query = query.orEmpty(), historyDao = historyDao) }
+    val introDone = runBlocking { introDoneFlow.first() }
+
+    enableEdgeToEdge()
+    setContent {
+      BetterSearchApp(
+        historyDao = historyDao,
+        introDone = introDone,
+        query = query.orEmpty(),
+      )
+    }
   }
 }

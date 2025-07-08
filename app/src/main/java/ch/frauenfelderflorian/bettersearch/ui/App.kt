@@ -25,7 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import ch.frauenfelderflorian.bettersearch.models.searchEngines
 import ch.frauenfelderflorian.bettersearch.services.dynamicColorSetting
 import ch.frauenfelderflorian.bettersearch.services.fetchSuggestions
-import ch.frauenfelderflorian.bettersearch.services.introDoneFlow
 import ch.frauenfelderflorian.bettersearch.services.isFuzzyMatch
 import ch.frauenfelderflorian.bettersearch.services.pillsEnginesSetting
 import ch.frauenfelderflorian.bettersearch.services.room.HistoryDao
@@ -45,11 +44,11 @@ import ch.frauenfelderflorian.bettersearch.ui.theme.BetterSearchTheme
 import ch.frauenfelderflorian.bettersearch.widget.BetterSearchWidgetReceiver
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun BetterSearchApp(
   historyDao: HistoryDao,
+  introDone: Boolean,
   modifier: Modifier = Modifier,
   query: String = "",
 ) {
@@ -57,7 +56,6 @@ fun BetterSearchApp(
   val scope = rememberCoroutineScope()
   val navController = rememberNavController()
 
-  val introDone = runBlocking { context.introDoneFlow.first() }
   val engine = context.searchEngineSetting(scope)
   val showPills = context.showPillsSetting(scope)
   val pillsEngines = context.pillsEnginesSetting(scope)
