@@ -11,14 +11,16 @@ plugins {
 
 android {
   namespace = "ch.frauenfelderflorian.bettersearch"
-  compileSdk = 36
+  compileSdk {
+    version = release(36)
+  }
 
   defaultConfig {
     applicationId = "ch.frauenfelderflorian.bettersearch"
     minSdk = 26
     targetSdk = 36
     versionCode = 1
-    versionName = libs.versions.app.get()
+    versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -50,9 +52,6 @@ android {
 kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_17
-  }
-  jvmToolchain {
-    languageVersion = JavaLanguageVersion.of(17)
   }
 }
 
