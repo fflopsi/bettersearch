@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,7 +45,7 @@ import ch.frauenfelderflorian.bettersearch.ui.components.InfoButton
 import ch.frauenfelderflorian.bettersearch.ui.components.InfoDialog
 import ch.frauenfelderflorian.bettersearch.ui.components.SuggestionRow
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
   query: TextFieldState,
@@ -73,8 +72,7 @@ fun SearchScreen(
   Scaffold(
     topBar = {
       TopAppBar(
-        title = { Text(text = stringResource(R.string.app_name)) },
-        subtitle = { Text(text = engine.name) },
+        title = { Text(text = "${stringResource(R.string.app_name)}: ${engine.name}") },
         actions = {
           Row {
             InfoButton(show = showInfo)
