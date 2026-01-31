@@ -37,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -70,12 +69,11 @@ fun HistoryScreen(
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val context = LocalContext.current
-
+  val allString = stringResource(R.string.all)
   var searchEngineSelectorExpanded by remember { mutableStateOf(false) }
   var selectedSearchEngine: SearchEngine? by remember { mutableStateOf(null) }
   val selectedSearchEngineText by remember {
-    derivedStateOf { TextFieldState(selectedSearchEngine?.name ?: context.getString(R.string.all)) }
+    derivedStateOf { TextFieldState(selectedSearchEngine?.name ?: allString) }
   }
 
   Scaffold(
