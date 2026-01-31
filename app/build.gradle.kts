@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.google.ksp)
+  alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -52,6 +53,10 @@ kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_17
   }
+}
+
+room {
+  schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
